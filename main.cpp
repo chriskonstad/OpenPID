@@ -35,6 +35,7 @@
 #include "qpid.h"
 #include "qin.h"
 #include <QtDebug>
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
@@ -42,18 +43,21 @@ int main(int argc, char *argv[])
     a.setApplicationVersion("1.0");
 
     QStringList arguments = QCoreApplication::arguments();
+    //arguments.at(0) == application name
 
-    //qDebug() << "starting application";
+    if(arguments.count() < 8)
+    {
+        std::cout << "Not enough arguments. Exiting." << std::endl;
+        return -1;
+    }
+
     QPID pid;
     //ARGUMENTS: kP, kI,kD, outMin, outMax, setPoint, direction (if 1, then make it indirect, else direct)
     //Example arguments to output a value between 0 and 100 while trying to move the input value to 50: 0.5 0.00015 0.0003 0 100 50 1
     pid.configPID(arguments.at(1).toDouble(), arguments.at(2).toDouble(), arguments.at(3).toDouble(), arguments.at(4).toDouble(), arguments.at(5).toDouble());
     pid.setSetPoint(arguments.at(6).toDouble());
-    if(arguments.count() == 8)  //if the argument is passed
-    {
-        if(arguments.at(7).toInt() == 1)
-            pid.setDirection(false);    //make indirect
-    }
+    if(arguments.at(7).toInt() == 1)
+        pid.setDirection(false);    //make indirect
 
     QIn qin(&pid);  //object that waits for the new data to come along
 

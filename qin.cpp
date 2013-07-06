@@ -14,7 +14,6 @@ QIn::QIn(QPID *pidPointer, QObject *parent) :
     timer->setInterval(20); //50Hz
     connect(timer, SIGNAL(timeout()), this, SLOT(checkForData()));
     timer->start();
-    //qDebug() << "Finished QIn constructor";
 }
 
 void QIn::checkForData()
@@ -29,5 +28,4 @@ void QIn::checkForData()
     {
         std::cout << pid->calculate(inputData.toDouble()) << std::endl;
     }
-    //qDebug() << "checked stdin";
 }
